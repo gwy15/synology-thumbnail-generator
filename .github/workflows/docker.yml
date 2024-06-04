@@ -17,16 +17,11 @@ jobs:
       SQLX_OFFLINE: 1
     steps:
       - uses: actions/checkout@v2
-      - name: Generate Docker tags
+      - name: Docker meta
         id: meta
-        uses: crazy-max/ghaction-docker-meta@v2
+        uses: docker/metadata-action@v5
         with:
-          images: |
-            gwy15/synology-thumbnail-generator
-          tags: |
-            type=ref,event=branch
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
+          images: gwy15/synology-thumbnail-generator
 
       - name: Login to Docker Hub
         if: github.event_name != 'pull_request'

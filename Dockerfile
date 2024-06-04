@@ -21,5 +21,5 @@ RUN apt update \
 
 COPY --from=builder /code/target/release/nology-thumbnail-generator .
 
-ENTRYPOINT [ "./nology-thumbnail-generator" ]
+ENTRYPOINT [ "./synology-thumbnail-generator" ]
 CMD []

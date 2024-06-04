@@ -34,7 +34,7 @@ fn output_dir(img_path: &Path) -> Result<PathBuf> {
         .context("Failed to get file stem")?
         .to_str()
         .context("Failed to convert file stem to string")?;
-    let output_dir = parent_dir.join(format!("@eaDir/{}", filename));
+    let output_dir = parent_dir.join("@eaDir").join(filename);
     Ok(output_dir)
 }
 
@@ -56,8 +56,10 @@ fn read_file(img_path: &Path) -> Result<(bool, core::Mat)> {
 
 pub fn process_file(img_path: PathBuf, force: bool) -> Result<()> {
     // Determine the output path
-    let output_dir = output_dir(&img_path)?;
-    std::fs::create_dir_all(&output_dir)?;
+    let output_dir = output_dir(&img_path)
+        .with_context(|| format!("get output dir for {} failed", img_path.display()))?;
+    std::fs::create_dir_all(&output_dir)
+        .with_context(|| format!("create output dir {} failed", output_dir.display()))?;
 
     let tasks = [Size::Small, Size::Middle, Size::Large]
         .map(|size| (size, output_dir.join(size.name())))
@@ -70,7 +72,8 @@ pub fn process_file(img_path: PathBuf, force: bool) -> Result<()> {
     }
 
     // get size first
-    let (portrait, img) = read_file(&img_path)?;
+    let (portrait, img) = read_file(&img_path)
+        .with_context(|| format!("read image {} failed", img_path.display()))?;
 
     for (size, output_path) in tasks {
         let output = output_path.to_str().context("output.to_str() failed")?;

@@ -19,7 +19,7 @@ RUN apt update \
     && apt-get install -y libopencv-core4.5 libopencv-imgproc4.5 libopencv-imgcodecs4.5 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /code/target/release/nology-thumbnail-generator .
+COPY --from=builder /code/target/release/synology-thumbnail-generator .
 
 ENTRYPOINT [ "./synology-thumbnail-generator" ]
 CMD []
